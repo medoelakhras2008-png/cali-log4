@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout Tracker Pro</title>
+    <style>
+        :root {
+            --bg-dark: #05070a;
+            --card-blue: #0f172a;
+            --border-blue: #1d4ed8;
+            --text-light: #f8fafc;
+            --accent-cyan: #38bdf8;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0; padding: 10px; direction: ltr;
+        }
+
+        header {
+            text-align: center; padding: 20px;
+            background: linear-gradient(180deg, #1e3a8a 0%, var(--bg-dark) 100%);
+            border-bottom: 2px solid var(--border-blue);
+            margin-bottom: 20px; border-radius: 0 0 20px 20px;
+        }
+
+        h2 { color: var(--accent-cyan); font-size: 1.2rem; margin: 25px 0 10px 10px; border-left: 4px solid var(--border-blue); padding-left: 10px; }
+
+        .exercise-card {
+            background: var(--card-blue); border: 1px solid #1e293b;
+            border-radius: 12px; margin-bottom: 12px; padding: 12px;
+            display: flex; align-items: center; gap: 15px;
+        }
+
+        .exercise-img {
+            width: 90px; height: 90px; border-radius: 8px;
+            object-fit: cover; border: 1px solid var(--border-blue);
+            background: #fff;
+        }
+
+        .group-container { background: #0f172a80; border-radius: 12px; padding: 5px; border: 1px solid #1e293b; margin-bottom: 15px; }
+
+        .content { flex: 1; }
+        .content h3 { margin: 0 0 10px 0; font-size: 1rem; color: #fff; }
+
+        .inputs-row { display: flex; gap: 8px; }
+        input {
+            background: #020617; border: 1px solid #334155;
+            color: white; padding: 8px; border-radius: 6px; width: 85px; text-align: center;
+        }
+        input:focus { border-color: var(--accent-cyan); outline: none; }
+
+        .sub-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px; border-top: 1px solid #1e293b;
+        }
+
+        .save-btn {
+            position: fixed; bottom: 20px; right: 20px;
+            background: var(--border-blue); color: white; border: none;
+            padding: 15px 25px; border-radius: 30px; font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5); cursor: pointer; z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1 style="margin:0; font-size: 1.5rem;">WORKOUT TRACKER</h1>
+</header>
+
+<h2>1. Reps & Weight</h2>
+<div id="reps-container"></div>
+
+<h2>2. Isometric (Time in Sec)</h2>
+<div id="static-container"></div>
+
+<button class="save-btn" onclick="saveData()">SAVE WORKOUT</button>
+
+<script>
+    const repsExercises = [
+        { name: "Pull Up", img: "https://i.ibb.co/gbqWmf1k/Screenshot-20251224-065449-Chrome.png", hasWeight: true },
+        { name: "Chin Up", img: "https://i.ibb.co/1JdRqkwd/Screenshot-20251224-065514-Chrome.png", hasWeight: true },
+        { name: "Muscle Up", img: "https://i.ibb.co/N21JVv65/14011101-Muscle-up-on-vertical-bar-Back-small.jpg", hasWeight: true },
+        { name: "Dips", img: "https://i.ibb.co/nMDbLWKc/triceps-dip-on-high-parallel-600nw-2586714307.jpg", hasWeight: true },
+        { name: "Bench Press", img: "https://i.ibb.co/6R2S7V78/1000326656.jpg", hasWeight: true }, // تعديل صورة البنش بريس
+        { name: "Shoulder Press", img: "https://i.ibb.co/CpKpZ9xj/Screenshot-20251224-065648-Chrome.png", hasWeight: true },
+        { name: "Handstand Push up", img: "https://i.ibb.co/qYVfjqxD/Screenshot-20251224-071437-Chrome.png", hasWeight: false }
+    ];
+
+    const staticExercises = [
+        { 
+            group: "Back Lever", 
+            img: "https://i.ibb.co/HLv6wGJr/Screenshot-20251224-070003-Chrome.png", // صورة الباك ليفر الصحيحة
+            variants: ["Back Lever Full", "Back Lever One Leg", "Back Lever 90°"]
+        },
+        { 
+            group: "Front Lever", 
+            img: "https://i.ibb.co/TMS0Fd6X/front-lever.jpg",
+            variants: ["Front Lever Full", "Front Lever One Leg", "Front Lever Tuck 90°"]
+        },
+        {
+            group: "Handstand",
+            img: "https://i.ibb.co/qYVfjqxD/Screenshot-20251224-071437-Chrome.png", // صورة الهاند ستاند
+            variants: ["Handstand Hold"]
+        }
+    ];
+
+    const repsList = document.getElementById('reps-container');
+    repsExercises.forEach(ex => {
+        const id = ex.name.replace(/\s+/g, '');
+        repsList.innerHTML += `
+            <div class="exercise-card">
+                <img src="${ex.img}" class="exercise-img">
+                <div class="content">
+                    <h3>${ex.name}</h3>
+                    <div class="inputs-row">
+                        ${ex.hasWeight ? `<input type="number" id="${id}-w" placeholder="Weight KG">` : ''}
+                        <input type="number" id="${id}-r" placeholder="Reps">
+                    </div>
+                </div>
+            </div>`;
+    });
+
+    const staticList = document.getElementById('static-container');
+    staticExercises.forEach(group => {
+        let itemsHtml = '';
+        group.variants.forEach(v => {
+            const vid = v.replace(/\s+/g, '');
+            itemsHtml += `
+                <div class="sub-item">
+                    <span>${v}</span>
+                    <input type="number" id="${vid}-t" placeholder="Seconds">
+                </div>`;
+        });
+
+        staticList.innerHTML += `
+            <div class="group-container">
+                <div style="display: flex; align-items: center; padding: 12px; gap: 15px;">
+                    <img src="${group.img}" class="exercise-img">
+                    <h3 style="margin:0">${group.group}</h3>
+                </div>
+                ${itemsHtml}
+            </div>`;
+    });
+
+    function saveData() {
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => localStorage.setItem(input.id, input.value));
+        alert("Saved! عاش يا بطل 💪");
+    }
+
+    window.onload = () => {
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            const val = localStorage.getItem(input.id);
+            if (val) input.value = val;
+        });
+    };
+</script>
+
+</body>
+</html>
