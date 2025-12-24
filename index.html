@@ -81,21 +81,20 @@
 <button class="save-btn" onclick="saveData()">SAVE WORKOUT</button>
 
 <script>
-    // توزيع الصور اللي رفعتها بالترتيب المظبوط
     const repsExercises = [
         { name: "Pull Up", img: "https://i.ibb.co/gbqWmf1k/Screenshot-20251224-065449-Chrome.png", hasWeight: true },
         { name: "Chin Up", img: "https://i.ibb.co/1JdRqkwd/Screenshot-20251224-065514-Chrome.png", hasWeight: true },
         { name: "Muscle Up", img: "https://i.ibb.co/N21JVv65/14011101-Muscle-up-on-vertical-bar-Back-small.jpg", hasWeight: true },
         { name: "Dips", img: "https://i.ibb.co/nMDbLWKc/triceps-dip-on-high-parallel-600nw-2586714307.jpg", hasWeight: true },
-        { name: "Bench Press", img: "https://static.strengthlevel.com/images/exercises/bench-press/bench-press-800.jpg", hasWeight: true },
+        { name: "Bench Press", img: "https://static.strengthlevel.com/images/exercises/bench-press/bench-press-800.jpg", hasWeight: true }, // تعديل صورة البنش بريس
         { name: "Shoulder Press", img: "https://i.ibb.co/CpKpZ9xj/Screenshot-20251224-065648-Chrome.png", hasWeight: true },
-        { name: "Handstand Push up", img: "https://i.ibb.co/gbqWmf1k/Screenshot-20251224-065449-Chrome.png", hasWeight: false } // عدات فقط
+        { name: "Handstand Push up", img: "https://i.ibb.co/qYVfjqxD/Screenshot-20251224-071437-Chrome.png", hasWeight: false }
     ];
 
     const staticExercises = [
         { 
             group: "Back Lever", 
-            img: "https://i.ibb.co/qYVfjqxD/Screenshot-20251224-071437-Chrome.png",
+            img: "https://i.ibb.co/HLv6wGJr/Screenshot-20251224-070003-Chrome.png", // صورة الباك ليفر الصحيحة
             variants: ["Back Lever Full", "Back Lever One Leg", "Back Lever 90°"]
         },
         { 
@@ -105,7 +104,7 @@
         },
         {
             group: "Handstand",
-            img: "https://i.ibb.co/HLv6wGJr/Screenshot-20251224-070003-Chrome.png", // صورة الشخص مفرود تماماً
+            img: "https://i.ibb.co/qYVfjqxD/Screenshot-20251224-071437-Chrome.png", // صورة الهاند ستاند
             variants: ["Handstand Hold"]
         }
     ];
